@@ -23,11 +23,13 @@ angular.module('myModule', [])
     this.$apply(fn);
 }
 };
-var orders_ref         = firebase.firestore();
-$scope.orders          = [];
-$scope.isLoading       = false;
-$scope.isLoading_modal = false;
-$scope.count           = {
+var db                   = firebase.firestore();
+$scope.orders            = [];
+$scope.order_detail      = {docID: null}
+$scope.isLoading         = false;
+$scope.isLoading_modal   = false;
+$scope.isOrderStatusEdit = false;
+$scope.count             = {
     total_orders   : 0,
     delivery_orders: 0,
     walkin_orders  : 0,
@@ -38,34 +40,31 @@ $scope.login_        = { email: null, password: null, ip: null };
 $scope.$on('toggle_animation', function (event, data) {
     $scope.animation_div = data;
 });
-orders_ref.collection("orders")
+db.collection("orders")
 .onSnapshot(function(querySnapshot) {
     let data_ = [];
     let count = {
-        total_orders : 0,
-        delivery_orders : 0,
-        walkin_orders : 0,
+        total_orders   : 0,
+        delivery_orders: 0,
+        walkin_orders  : 0,
         total_customers: 0
 
     }
     querySnapshot.forEach(function(doc) {
         let temp = doc.data();
-        if(temp.delivery_option == 0) count.delivery_orders++;
+        if(temp.delivery_option      == 0) count.delivery_orders++;
         else if(temp.delivery_option == 1) count.walkin_orders++;
         count.total_orders++;
+        temp.docID = doc.id;
+        if(temp.docID == $scope.order_detail.docID) $scope.order_detail.order_status = temp.order_status;
         data_.push(temp);
     });
-    console.log(data_);
     $scope.$apply(function () {
         count.total_customers = _.uniqBy(data_, 'userID').length;
-        console.log(count);
-        $scope.count = count;
-        $scope.orders = data_;
+        $scope.count          = count;
+        $scope.orders         = data_;
     });
 });
-// user_ref.listUsers().then(function(listUsersResult){
-//     console.table(listUsersResult);
-// })
 $scope.bindOrderDetail = async function (order_detail) {
     $scope.isLoading_modal = true;
     console.log(order_detail);
@@ -136,19 +135,37 @@ $scope.bindOrderDetail = async function (order_detail) {
     });        
 };
 $scope.emptyOrderDetails = function () {
-    $scope.order_detail = null;
+    $scope.order_detail = {docID : null};
 };
-$scope.getUsers = function () {
-}
-$scope.getSurveys = function () {
 
+$scope.changeOrderStatus_open = function(item = null){
+    if(item == null) return;
+    console.log(item);
+    $scope.isOrderStatusEdit = true;
+}
+$scope.changeOrderStatus_close = function(item = null){
+    $scope.isOrderStatusEdit = false;
+}
+$scope.changeOrderStatus = function(status, order_detail){
+    if(status == null) return;
+    if(confirm("Are you sure to change status?")){
+        console.log(status);
+        console.log(order_detail);
+        db.collection("orders").doc(order_detail.docID).update({
+            order_status    : status,
+            action_timestamp: moment().format('YYYY-MM-DD hh:mm:ss')
+        }).then(function(){
+            console.log('updated!');
+        }).catch(function(error){
+            console.log(error);
+        }).finally(function(){
+            $scope.order_detail.order_status = status;
+        });
+    }
+    $scope.changeOrderStatus_close();
 }
 $scope.setupPage = function () {
-    $scope.UserData = [];
-    $scope.SurveyData = [];
-    $scope.ProcessedUsers = [];
-    $scope.getUsers();
-    $scope.getSurveys();
+
 }
 $scope.getItemIcon = function (itemType) {
     if (itemType == 'TV') return 'icon-screen-desktop';
