@@ -152,11 +152,11 @@
 										<div class="container-fluid">
 											<div class="row">
 												<div class="col-xs-6 text-center pl-0 pr-0 data-wrap-left">
-													<span class="txt-light block counter"><span class="counter-anim">123</span></span>
+													<span class="txt-light block counter"><span class="counter-anim--">{{count.total_orders}}</span></span>
 													<span class="weight-500 uppercase-font txt-light block font-13">Total Orders</span>
 												</div>
 												<div class="col-xs-6 text-center  pl-0 pr-0 data-wrap-right">
-													<i class="zmdi zmdi-male-female txt-light data-right-rep-icon"></i>
+													<i class="zmdi zmdi-shopping-cart txt-light data-right-rep-icon"></i>
 												</div>
 											</div>
 										</div>
@@ -173,11 +173,11 @@
 										<div class="container-fluid">
 											<div class="row">
 												<div class="col-xs-6 text-center pl-0 pr-0 data-wrap-left">
-													<span class="txt-light block counter"><span class="counter-anim">46.41</span>%</span>
+													<span class="txt-light block counter"><span class="counter-anim--">{{count.walkin_orders}}</span></span>
 													<span class="weight-500 uppercase-font txt-light block">Walkin Orders</span>
 												</div>
 												<div class="col-xs-6 text-center  pl-0 pr-0 data-wrap-right">
-													<i class="zmdi zmdi-redo txt-light data-right-rep-icon"></i>
+													<i class="zmdi zmdi-directions-walk txt-light data-right-rep-icon"></i>
 												</div>
 											</div>
 										</div>
@@ -194,11 +194,11 @@
 										<div class="container-fluid">
 											<div class="row">
 												<div class="col-xs-6 text-center pl-0 pr-0 data-wrap-left">
-													<span class="txt-light block counter"><span class="counter-anim">4,054,876</span></span>
+													<span class="txt-light block counter"><span class="counter-anim--">{{count.delivery_orders}}</span></span>
 													<span class="weight-500 uppercase-font txt-light block">Delivery Orders</span>
 												</div>
 												<div class="col-xs-6 text-center  pl-0 pr-0 data-wrap-right">
-													<i class="zmdi zmdi-file txt-light data-right-rep-icon"></i>
+													<i class="zmdi zmdi-directions-bike txt-light data-right-rep-icon"></i>
 												</div>
 											</div>
 										</div>
@@ -215,8 +215,8 @@
 										<div class="container-fluid">
 											<div class="row">
 												<div class="col-xs-6 text-center pl-0 pr-0 data-wrap-left">
-													<span class="txt-light block counter"><span class="counter-anim">46.43</span>%</span>
-													<span class="weight-500 uppercase-font txt-light block">growth rate</span>
+													<span class="txt-light block counter"><span class="counter-anim">10</span></span>
+													<span class="weight-500 uppercase-font txt-light block">Total Customers</span>
 												</div>
 												<div class="col-xs-6 text-center  pl-0 pr-0 pt-25  data-wrap-right">
 													<div id="sparkline_4" style="width: 100px; overflow: hidden; margin: 0px auto;"></div>
@@ -383,9 +383,13 @@
 														</tr>
 													</thead>
 													<tbody>
-														<tr>
-															<td>Picture 1</td>
-															<td>Picture 2</td>
+														<tr ng-show="order_detail.order_items.length < 0">
+															<td colspan="2">No Item(s) found!</td>
+														</tr>
+														<tr ng-show="order_detail.order_items.length > 0">
+															<td ng-repeat="image in order_detail.order_items">
+																<img ng-src="{{image}}" class="img-responsive">
+															</td>
 														</tr>
 													</tbody>
 												</table>
@@ -397,12 +401,12 @@
 														</tr>
 													</thead>
 													<tbody>
-														<tr ng-show="order_detail.order_items.length > 0">
+														<tr ng-show="order_detail.order_items.length < 0">
 															<td colspan="2">No Item(s) found!</td>
 														</tr>
-														<tr ng-repeat="items in order_detail.order_items" ng-show="order_detail.order_items.length > 0">
-															<td>{{item.medicine_description}}</td>
-															<td>{{item.medicine_quantity}}</td>
+														<tr ng-repeat="(key, value) in order_detail.order_items" ng-show="order_detail.order_items.length > 0">
+															<td>{{value.medicine_description}}</td>
+															<td>{{value.medicine_quantity}}</td>
 														</tr>
 													</tbody>
 												</table>
@@ -443,6 +447,7 @@
 	<!-- Firebase -->
 	<script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-app.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-firestore.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-storage.js"></script>
 	<!-- Bootstrap Core JavaScript -->
 	<script src="vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 	<!-- Data table JavaScript -->
