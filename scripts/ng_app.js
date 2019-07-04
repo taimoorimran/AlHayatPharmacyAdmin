@@ -24,25 +24,29 @@ angular.module('myModule', [])
 }
 };
 
-var db = firebase.firestore();
-$scope.orders = [];
-$scope.count = {
+// var user_ref   = firebase.auth();
+var orders_ref = firebase.firestore();
+$scope.orders  = [];
+$scope.count   = {
     total_orders : 0,
     delivery_orders : 0,
     walkin_orders : 0,
+    total_customers: 0
 }
 $scope.animation_div = true;
-$scope.login_ = { email: null, password: null, ip: null };
+$scope.login_        = { email: null, password: null, ip: null };
 $scope.$on('toggle_animation', function (event, data) {
     $scope.animation_div = data;
 });
-db.collection("orders")
+orders_ref.collection("orders")
 .onSnapshot(function(querySnapshot) {
     let data_ = [];
     let count = {
         total_orders : 0,
         delivery_orders : 0,
         walkin_orders : 0,
+        total_customers: 0
+
     }
     querySnapshot.forEach(function(doc) {
         let temp = doc.data();
@@ -53,11 +57,15 @@ db.collection("orders")
     });
     console.log(data_);
     $scope.$apply(function () {
+        count.total_customers = _.uniqBy(data_, 'userID').length;
         console.log(count);
         $scope.count = count;
         $scope.orders = data_;
     });
 });
+// user_ref.listUsers().then(function(listUsersResult){
+//     console.table(listUsersResult);
+// })
 $scope.bindOrderDetail = async function (order_detail) {
     console.log(order_detail);
     let order_items = [];
