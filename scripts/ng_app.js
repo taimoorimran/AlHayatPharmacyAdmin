@@ -23,14 +23,14 @@ angular.module('myModule', [])
     this.$apply(fn);
 }
 };
-
-// var user_ref   = firebase.auth();
-var orders_ref = firebase.firestore();
-$scope.orders  = [];
-$scope.count   = {
-    total_orders : 0,
-    delivery_orders : 0,
-    walkin_orders : 0,
+var orders_ref         = firebase.firestore();
+$scope.orders          = [];
+$scope.isLoading       = false;
+$scope.isLoading_modal = false;
+$scope.count           = {
+    total_orders   : 0,
+    delivery_orders: 0,
+    walkin_orders  : 0,
     total_customers: 0
 }
 $scope.animation_div = true;
@@ -67,6 +67,7 @@ orders_ref.collection("orders")
 //     console.table(listUsersResult);
 // })
 $scope.bindOrderDetail = async function (order_detail) {
+    $scope.isLoading_modal = true;
     console.log(order_detail);
     let order_items = [];
     if(order_detail.prescription_type == 1){
@@ -130,6 +131,7 @@ $scope.bindOrderDetail = async function (order_detail) {
     }
     order_detail.order_items = order_items;
     $scope.safeApply(function () {
+        $scope.isLoading_modal = false;
         $scope.order_detail = order_detail;
     });        
 };
@@ -154,7 +156,6 @@ $scope.getItemIcon = function (itemType) {
     else if (itemType == 'Magzine') return 'icon-book-open';
     else if (itemType == 'Newspaper') return 'icon-book-open';
     else return 'icon-home';
-
 };
 $scope.checkImage = function (url) {
     var http = new XMLHttpRequest();
