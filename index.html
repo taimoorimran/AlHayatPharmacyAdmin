@@ -267,7 +267,7 @@
 											</tr>
 										</thead>
 										<tbody>
-											<tr ng-repeat="order in orders | filter: search">
+											<tr ng-repeat="order in orders | filter: search | orderBy : sortList : true">
 												<td><span class="txt-dark weight-500">{{order.orderID}}</span></td>
 												<td>{{order.userID}}</td>
 												<td>{{order.timestamp}}</td>
@@ -335,7 +335,7 @@
 														</a>
 														<a style="margin-right: 2px" href="javascript:void(0)" ng-click="changeOrderStatus_close()"><i class="zmdi zmdi-close"></i></a>
 													</td>
-													<td>{{order_detail.userID}}</td>
+													<td>{{order_detail.user_contact_number}}</td>
 												</tr>
 											</tbody>
 										</table>
@@ -461,7 +461,7 @@
 <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-firestore.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-storage.js"></script>
-<!-- <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-auth.js"></script> -->
+<script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-auth.js"></script>
 <!-- Bootstrap Core JavaScript -->
 <script src="vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <!-- Data table JavaScript -->

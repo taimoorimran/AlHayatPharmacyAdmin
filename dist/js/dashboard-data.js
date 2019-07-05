@@ -348,7 +348,7 @@ var sparklineLogin = function() {
 		});
 	}
 	if( $('#sparkline_4').length > 0 ){
-		$("#sparkline_4").sparkline([0,2,8,6,8,5,6,4,8,6,6,2 ], {
+		$("#sparkline_4").sparkline([1,2,3,4,5,6,7 ], {
 			type: 'bar',
 			width: '100%',
 			height: '50',

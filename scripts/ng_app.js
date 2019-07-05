@@ -14,32 +14,70 @@ angular.module('myModule', [])
     ])
 .controller('myController', function ($scope, $http, $q, $sce, $timeout) {
     $scope.safeApply = function(fn) {
-      var phase = this.$root.$$phase;
-      if(phase == '$apply' || phase == '$digest') {
-        if(fn && (typeof(fn) === 'function')) {
-          fn();
-      }
-  } else {
-    this.$apply(fn);
-}
+        var phase = this.$root.$$phase;
+        if(phase == '$apply' || phase == '$digest') {
+            if(fn && (typeof(fn) === 'function')) {
+                fn();
+            }
+        } else {
+            this.$apply(fn);
+        }
+    };
+    $scope.sortList = function(order) {
+    var date = new Date(order.timestamp);
+    return date;
 };
-var db                   = firebase.firestore();
-$scope.orders            = [];
-$scope.order_detail      = {docID: null}
-$scope.isLoading         = false;
-$scope.isLoading_modal   = false;
-$scope.isOrderStatusEdit = false;
-$scope.count             = {
-    total_orders   : 0,
-    delivery_orders: 0,
-    walkin_orders  : 0,
-    total_customers: 0
-}
-$scope.animation_div = true;
-$scope.login_        = { email: null, password: null, ip: null };
-$scope.$on('toggle_animation', function (event, data) {
-    $scope.animation_div = data;
-});
+    // let email = "taimoor@markematics.net.pk";
+    // let password = "123456";
+    // $scope.login = false;
+    // $scope.loginWithCredentials = function(){
+    //     firebase.auth().signInWithEmailAndPassword(email, password)
+    //     .then(function(response){
+    //         console.log(response);
+    //         $scope.login = true;
+    //     })
+    //     .catch(function(error) {
+    //         console.log(error);
+    //     });
+    // }    
+    var db                   = firebase.firestore();
+    $scope.orders            = [];
+    $scope.order_detail      = {docID: null}
+    $scope.isLoading         = false;
+    $scope.isLoading_modal   = false;
+    $scope.isOrderStatusEdit = false;
+    $scope.count             = {
+        total_orders   : 0,
+        delivery_orders: 0,
+        walkin_orders  : 0,
+        total_customers: 0
+    }
+    $scope.animation_div = true;
+    $scope.login_        = { email: null, password: null, ip: null };
+    $scope.$on('toggle_animation', function (event, data) {
+        $scope.animation_div = data;
+    });
+
+// function listAllUsers(nextPageToken) {
+//     console.log('sadasdasd');
+//   // List batch of users, 1000 at a time.
+//   admin.auth().listUsers(1000, nextPageToken)
+//     .then(function(listUsersResult) {
+//       listUsersResult.users.forEach(function(userRecord) {
+//         console.log('user', userRecord.toJSON());
+//       });
+//       if (listUsersResult.pageToken) {
+//         // List next batch of users.
+//         listAllUsers(listUsersResult.pageToken);
+//       }
+//     })
+//     .catch(function(error) {
+//       console.log('Error listing users:', error);
+//     });
+// }
+// // Start listing users from the beginning, 1000 at a time.
+// listAllUsers();
+
 db.collection("orders")
 .onSnapshot(function(querySnapshot) {
     let data_ = [];
